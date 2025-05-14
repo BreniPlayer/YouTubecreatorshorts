@@ -71,3 +71,13 @@ def credentials_to_dict(credentials):
 
 if __name__ == "__main__":
     app.run("localhost", 5000, debug=True)
+flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+    CLIENT_SECRETS_FILE, scopes=SCOPES, state=state)
+flow.redirect_uri = url_for('oauth2callback', _external=True)
+
+flow.fetch_token(authorization_response=request.url)
+
+credentials = flow.credentials
+session['credentials'] = credentials_to_dict(credentials)
+
+return redirect("/canal")
